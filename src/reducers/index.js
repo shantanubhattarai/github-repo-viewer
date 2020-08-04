@@ -1,9 +1,11 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from "redux";
 
-import repoReducer from './repoReducer';
+import repoReducer from "./repoReducer";
+import profileReducer from "./profileReducer";
 
 const reducer = combineReducers({
-  repo: repoReducer
+  repo: repoReducer,
+  profile: profileReducer,
 });
 
 export default reducer;

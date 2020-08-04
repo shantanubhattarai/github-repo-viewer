@@ -1,20 +1,54 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import * as repoActions from "../actions/repoActions";
 
-function List({ repoList, setRepoList, page, itemsPerPage }) {
-  useEffect(() => {
+class List extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { search: "" };
+  }
+
+  componentDidMount() {
     fetch("https://api.github.com/users/shantanubhattarai/repos")
       .then((response) => response.json())
-      .then((response) => setRepoList(response));
-  }, [setRepoList]);
-  return (
-    <ul>
-      {repoList.map((item) => (
-        <li key={item.id}>{item.name}</li>
-      ))}
-    </ul>
-  );
+      .then((response) => this.props.setRepoList(response));
+  }
+
+  setSearchText(searchText) {
+    this.setState({ search: searchText });
+  }
+
+  filterBySearchText(searchList) {
+    return searchList.filter((item) =>
+      item.name.toLowerCase().includes(this.state.search.toLowerCase())
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        <input
+          type="text"
+          placeholder="Find a repository..."
+          onChange={(e) => this.setSearchText(e.target.value)}
+        />
+        <ul>
+          {this.filterBySearchText(this.props.repoList).map((item) => (
+            <li key={item.id}>
+              <a href={item.html_url}>{item.name}</a>
+              {item.language && (
+                <span className="repoLanguage">{item.language}</span>
+              )}
+              <span className="repoUpdated">
+                updated at:{" "}
+                {item.updated_at.substring(0, item.updated_at.indexOf("T"))}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
 }
 
 function mapStateToProps(state) {
