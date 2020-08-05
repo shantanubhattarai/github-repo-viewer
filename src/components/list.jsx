@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import * as repoActions from "../actions/repoActions";
+import * as httpUtils from "../utils/http";
+import * as appConfig from "../appConfig";
 
 class List extends React.Component {
   constructor(props) {
@@ -9,8 +11,8 @@ class List extends React.Component {
   }
 
   componentDidMount() {
-    fetch("https://api.github.com/users/shantanubhattarai/repos")
-      .then((response) => response.json())
+    httpUtils
+      .get(appConfig.endPoints.repos)
       .then((response) => this.props.setRepoList(response));
   }
 
@@ -24,6 +26,21 @@ class List extends React.Component {
     );
   }
 
+  filterByPage(searchList) {
+    return searchList.slice();
+  }
+
+  changePage(amount = 1) {
+    if (this.props.page === 0 && amount === -1) return;
+    if (
+      this.props.page ===
+        Math.floor(this.props.repoList.length / this.props.itemsPerPage) &&
+      amount === 1
+    )
+      return;
+    this.props.setPage(this.props.page + amount);
+  }
+
   render() {
     return (
       <div>
@@ -33,19 +50,34 @@ class List extends React.Component {
           onChange={(e) => this.setSearchText(e.target.value)}
         />
         <ul>
-          {this.filterBySearchText(this.props.repoList).map((item) => (
+          {this.filterBySearchText(
+            this.props.repoList.slice(
+              this.props.page * this.props.itemsPerPage,
+              (this.props.page + 1) * this.props.itemsPerPage
+            )
+          ).map((item) => (
             <li key={item.id}>
               <a href={item.html_url}>{item.name}</a>
               {item.language && (
-                <span className="repoLanguage">{item.language}</span>
+                <span className={`repoLanguage`}>{item.language}</span>
               )}
               <span className="repoUpdated">
-                updated at:{" "}
+                Updated at:{" "}
                 {item.updated_at.substring(0, item.updated_at.indexOf("T"))}
               </span>
             </li>
           ))}
         </ul>
+        <div className="paginate">
+          <div className="btn-container">
+            <button className="page-btn" onClick={() => this.changePage(-1)}>
+              Previous
+            </button>
+            <button className="page-btn" onClick={() => this.changePage(1)}>
+              Next
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -63,6 +95,9 @@ function mapDispatchToProps(dispatch) {
   return {
     setRepoList: (repoList) => {
       dispatch(repoActions.setRepoList(repoList));
+    },
+    setPage: (page) => {
+      dispatch(repoActions.setPage(page));
     },
   };
 }

@@ -10,6 +10,8 @@ function repoReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case repoActions.SET_REPOLIST:
       return { ...state, repoList: action.payload };
+    case repoActions.SET_PAGE:
+      return { ...state, page: action.payload };
     default:
       return state;
   }

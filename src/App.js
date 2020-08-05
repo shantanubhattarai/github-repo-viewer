@@ -5,11 +5,13 @@ import Profile from "./components/profile";
 
 function App() {
   return (
-    <div className="container clearfix">
-      <Profile />
-      <div className="repoListContainer">
-        <h2>Repositories</h2>
-        <List />
+    <div className="wrapper">
+      <div className="container clearfix">
+        <Profile />
+        <div className="repoListContainer">
+          <h2>Repositories</h2>
+          <List />
+        </div>
       </div>
     </div>
   );
