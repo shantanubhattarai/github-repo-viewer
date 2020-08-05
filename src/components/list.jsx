@@ -50,23 +50,23 @@ class List extends React.Component {
           onChange={(e) => this.setSearchText(e.target.value)}
         />
         <ul>
-          {this.filterBySearchText(
-            this.props.repoList.slice(
+          {this.filterBySearchText(this.props.repoList)
+            .slice(
               this.props.page * this.props.itemsPerPage,
               (this.props.page + 1) * this.props.itemsPerPage
             )
-          ).map((item) => (
-            <li key={item.id}>
-              <a href={item.html_url}>{item.name}</a>
-              {item.language && (
-                <span className={`repoLanguage`}>{item.language}</span>
-              )}
-              <span className="repoUpdated">
-                Updated at:{" "}
-                {item.updated_at.substring(0, item.updated_at.indexOf("T"))}
-              </span>
-            </li>
-          ))}
+            .map((item) => (
+              <li key={item.id}>
+                <a href={item.html_url}>{item.name}</a>
+                {item.language && (
+                  <span className={`repoLanguage`}>{item.language}</span>
+                )}
+                <span className="repoUpdated">
+                  Updated at:{" "}
+                  {item.updated_at.substring(0, item.updated_at.indexOf("T"))}
+                </span>
+              </li>
+            ))}
         </ul>
         <div className="paginate">
           <div className="btn-container">
