@@ -9,7 +9,7 @@ function App() {
       <div className="container clearfix">
         <Profile />
         <div className="repoListContainer">
-          <h2>Repositories</h2>
+          <h2 className="repo-heading">Repositories</h2>
           <List />
         </div>
       </div>
